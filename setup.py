@@ -40,7 +40,8 @@ setup(
 	packages = find_packages(),
 	package_data = {'asjp': ['data/*']},
 
-	install_requires = [],
+	install_requires = ['ipatok'],
+	python_requires = '>=3',
 
 	test_suite = 'asjp.tests'
 )
