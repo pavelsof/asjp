@@ -29,7 +29,7 @@ setup(
 	license = 'MIT',
 
 	classifiers = [
-		'Development Status :: 1 - Planning',
+		'Development Status :: 2 - Pre-Alpha',
 		'Intended Audience :: Science/Research',
 		'License :: OSI Approved :: MIT License',
 		'Programming Language :: Python :: 3',

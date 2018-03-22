@@ -13,23 +13,22 @@ v	v
 t	t
 d	d
 n	n
-n̪	4
 r	r
-ɾ
+ɾ	r
 θ	8
 ð	8
 s	s
 z	z
 ʃ	S
 ʒ	Z
-ɬ
-ɮ
+ɬ	L
+ɮ	L
 ɹ
 l	l
 ʈ
 ɖ
 ɳ
-ɽ
+ɽ	r
 ʂ
 ʐ
 ɻ
@@ -60,7 +59,8 @@ q	q
 h	h
 ɦ	h
 
-# not explicitly in IPA but present in ASJP: some affricates
+# not explicitly in IPA but present in ASJP
+n̪	4
 ts	c
 dz	c
 tʃ	C
@@ -103,7 +103,7 @@ e	e
 a	E
 ɶ	E
 ɨ	3
-ʉ
+ʉ	3
 ɘ	3
 ɵ	3
 ə	3
@@ -112,7 +112,7 @@ a	E
 ɐ	a
 ɯ	u
 u	u
-ʊ
+ʊ	u
 ɤ	o
 o	o
 ʌ	o
