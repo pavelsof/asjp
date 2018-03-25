@@ -1,4 +1,5 @@
 import os.path
+import unicodedata
 
 import ipatok
 
@@ -17,12 +18,15 @@ class Chart:
 	"""
 
 	def __init__(self):
+		"""
+		"""
 		self.ipa2asjp = {}
 		self.asjp2ipa = {}
+		self.asjp_letters = set()
 
 	def load(self, path):
 		"""
-		Populate the instance's dicts.
+		Populate the instance's dicts and set.
 		"""
 		with open(path, encoding='utf-8') as f:
 			for line in map(lambda x: x.strip(), f):
@@ -37,6 +41,8 @@ class Chart:
 
 				if len(line) > 2:
 					self.asjp2ipa[line[1]] = line[0]
+
+		self.asjp_letters = set(self.asjp2ipa.keys())
 
 
 
@@ -93,13 +99,62 @@ def asjp2ipa(asjp_seq):
 	pass
 
 
-def tokenise(asjp_string):
+def tokenise_word(string):
 	"""
-	Tokenise an ASJP string into a list of tokens.
+	Tokenise an ASJP string into a list of tokens or raise ValueError if it
+	cannot be unambiguously tokenised. The string is assumed to comprise a
+	single word, i.e. it should not contain whitespace chars.
+
+	Helper for tokenise(string).
+	"""
+	tokens = []
+
+	for ix, char in enumerate(string):
+		if char in '~$':
+			try:
+				for _ in range(1 if char == '~' else 2):
+					last_token = tokens.pop()
+					tokens[-1] += last_token
+				tokens[-1] += char
+			except IndexError:
+				raise ValueError('ambiguous usage of {} ({})'.format(char, unicodedata.name(char)))
+
+		elif char in '"*':
+			try:
+				tokens[-1] += char
+			except IndexError:
+				raise ValueError('word-initial {} ({})'.format(char, unicodedata.name(char)))
+
+		elif char in chart.asjp_letters:
+			tokens.append(char)
+
+		else:
+			raise ValueError('unknown symbol {} ({})'.format(char, unicodedata.name(char)))
+
+	return tokens
+
+
+def tokenise(string):
+	"""
+	Tokenise an ASJP string into a list of tokens or raise ValueError if it
+	cannot be unambiguously tokenised. The input may consist of several words,
+	i.e. whitespace-separated sub-strings. Usage:
+
+	>>> tokenise('novE zEmy~E')
+	['n', 'o', 'v', 'E', 'z', 'E', 'my~', 'E']
 
 	Part of the package's public API.
 	"""
-	pass
+	words = string.split()
+	output = []
+
+	for word in words:
+		try:
+			output.extend(tokenise_word(word))
+		except ValueError as err:
+			raise ValueError('Cannot tokenise {}: {!s}'.format(word, err))
+
+	return output
 
 
 """

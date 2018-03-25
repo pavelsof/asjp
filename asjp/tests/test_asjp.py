@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from asjp import ipa2asjp
+from asjp import ipa2asjp, tokenise
 
 
 
@@ -33,3 +33,18 @@ class ApiTestCase(TestCase):
 		self.assertEqual(ipa2asjp('stəʊn'), 'st3un')
 		self.assertEqual(ipa2asjp('ɜːθ'), '38')
 		self.assertEqual(ipa2asjp('ˈfaɪə'), 'fEi3')
+
+	def test_tokenise(self):
+		"""
+		ASJP strings should be correctly tokenised and non-compliant strings
+		should raise ValueError.
+		"""
+		self.assertEqual(tokenise(''), [])
+		self.assertEqual(tokenise('novE zEmy~E'), ['n', 'o', 'v', 'E', 'z', 'E', 'my~', 'E'])
+		self.assertEqual(tokenise('a*kw~ndy$k"'), ['a*', 'kw~', 'ndy$', 'k"'])
+
+		with self.assertRaises(ValueError): tokenise('*a')
+		with self.assertRaises(ValueError): tokenise('"p')
+		with self.assertRaises(ValueError): tokenise('a~')
+		with self.assertRaises(ValueError): tokenise('aa$')
+		with self.assertRaises(ValueError): tokenise('a~$')
