@@ -1,30 +1,30 @@
 # IPA section: consonants (pulmonic)
-p	p
-b	b
-m	m
+p	p	✓
+b	b	✓
+m	m	✓
 ʙ
 ɸ	p
 β	b
 ɱ
 ⱱ
-f	f
-v	v
+f	f	✓
+v	v	✓
 ʋ
-t	t
-d	d
-n	n
-r	r
+t	t	✓
+d	d	✓
+n	n	✓
+r	r	✓
 ɾ	r
-θ	8
+θ	8	✓
 ð	8
-s	s
-z	z
-ʃ	S
-ʒ	Z
+s	s	✓
+z	z	✓
+ʃ	S	✓
+ʒ	Z	✓
 ɬ	L
 ɮ	L
 ɹ
-l	l
+l	l	✓
 ʈ
 ɖ
 ɳ
@@ -33,43 +33,43 @@ l	l
 ʐ
 ɻ
 ɭ	L
-c	T
+c	T	✓
 ɟ	T
-ɲ	5
+ɲ	5	✓
 ç
 ʝ
-j	y
+j	y	✓
 ʎ	L
-k	k
-ɡ	g
-ŋ	N
-x	x
+k	k	✓
+ɡ	g	✓
+ŋ	N	✓
+x	x	✓
 ɣ	x
 ɰ
-ʟ	L
-q	q
-ɢ	G
+ʟ	L	✓
+q	q	✓
+ɢ	G	✓
 ɴ
 ʀ	r
-χ	X
+χ	X	✓
 ʁ	X
 ħ	X
 ʕ	X
-ʔ	7
-h	h
+ʔ	7	✓
+h	h	✓
 ɦ	h
 
 # not explicitly in IPA but present in ASJP
-n̪	4
-ts	c
+n̪	4	✓
+ts	c	✓
 dz	c
-tʃ	C
-dʒ	j
+tʃ	C	✓
+dʒ	j	✓
 
 # IPA section: consonants (non-pulmonic)
 ʘ	!
 ǀ	!
-ǃ	!
+ǃ	!	✓
 ǂ	!
 ǁ	!
 ɓ
@@ -80,7 +80,7 @@ dʒ	j
 
 # IPA section: other symbols
 ʍ
-w	w
+w	w	✓
 ɥ
 ʜ
 ʢ
@@ -91,30 +91,30 @@ w	w
 ɧ
 
 # IPA section: vowels
-i	i
+i	i	✓
 y	i
 ɪ	i
 ʏ	i
-e	e
+e	e	✓
 ø	e
 ɛ	E
 œ	E
 æ	E
-a	E
+a	E	✓
 ɶ	E
 ɨ	3
 ʉ	3
 ɘ	3
 ɵ	3
-ə	3
+ə	3	✓
 ɜ	3
 ɞ	3
-ɐ	a
+ɐ	a	✓
 ɯ	u
-u	u
+u	u	✓
 ʊ	u
 ɤ	o
-o	o
+o	o	✓
 ʌ	o
 ɔ	o
 ɑ	o

@@ -6,7 +6,7 @@ import ipatok
 
 
 """
-Paths to the asjp/data dir and the map file located there.
+Paths to the asjp/data dir and the chart file located there.
 """
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 CHART_FILE = os.path.join(DATA_DIR, 'chart')
@@ -15,10 +15,13 @@ CHART_FILE = os.path.join(DATA_DIR, 'chart')
 
 class Chart:
 	"""
+	Object that loads and stores the data from the chart file.
 	"""
 
 	def __init__(self):
 		"""
+		Init the instance's properties: two dicts mapping IPA symbols to their
+		ASJP counterparts and vice versa; and the set of ASJP letters.
 		"""
 		self.ipa2asjp = {}
 		self.asjp2ipa = {}
@@ -26,7 +29,14 @@ class Chart:
 
 	def load(self, path):
 		"""
-		Populate the instance's dicts and set.
+		Populate the instance's properties. The data is expected to be read
+		from a file which is parsed as follows:
+
+		- empty lines and lines starting with # are ignored;
+		- content lines should consist of tab-separated sub-strings, the first
+		  being an IPA symbol, the second its ASJP counterpart, and the
+		  presence of the optional third one indicating that the IPA symbol is
+		  also the ASJP's counterpart.
 		"""
 		with open(path, encoding='utf-8') as f:
 			for line in map(lambda x: x.strip(), f):
