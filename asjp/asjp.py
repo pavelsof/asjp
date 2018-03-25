@@ -36,7 +36,8 @@ class Chart:
 		- content lines should consist of tab-separated sub-strings, the first
 		  being an IPA symbol, the second its ASJP counterpart, and the
 		  presence of the optional third one indicating that the IPA symbol is
-		  also the ASJP's counterpart.
+		  also the ASJP's counterpart;
+		- content lines without a tab are ignored.
 		"""
 		with open(path, encoding='utf-8') as f:
 			for line in map(lambda x: x.strip(), f):
@@ -47,7 +48,7 @@ class Chart:
 				if len(line) < 2:
 					continue
 
-				self.ipa2asjp[line[0]] = line[1]
+				self.ipa2asjp[line[0].replace('ə͡'[1], '')] = line[1]
 
 				if len(line) > 2:
 					self.asjp2ipa[line[1]] = line[0]
@@ -100,13 +101,69 @@ def ipa2asjp(ipa_seq):
 		return asjp_seq
 
 
+def convert_asjp_token(token):
+	"""
+	Convert an ASJP token into an IPA token or raise ValueError if the input
+	does not constitute a valid ASJP token.
+
+	Helper for asjp2ipa(asjp_seq).
+	"""
+	juxtaposed = False
+	ipa_suffix = ''
+	output = ''
+
+	if len(token) > 1:
+		inferred_size = None
+
+		if token[-1] in '*"':
+			ipa_suffix += {'*': 'ə̃'[1], '"': 'ʼ'}[token[-1]]
+			inferred_size = 2
+		elif token[-1] in '~$':
+			juxtaposed = True
+			inferred_size = 3 if token[-1] == '~' else 4
+
+		if inferred_size is None or len(token) != inferred_size:
+			raise ValueError('invalid token {}'.format(token))
+
+		token = token[:-1]
+
+	for char in token:
+		if juxtaposed and char in 'hwyn':
+			output += {'h': 'ʰ', 'w': 'ʷ', 'y': 'ʲ', 'n': 'ⁿ'}[char]
+		elif char in chart.asjp2ipa:
+			output += chart.asjp2ipa[char]
+		else:
+			raise ValueError('invalid token {}'.format(token))
+
+	return output + ipa_suffix
+
+
 def asjp2ipa(asjp_seq):
 	"""
-	Convert an ASJP sequence into an IPA sequence.
+	Convert an ASJP sequence (string or list) into an IPA sequence of the same
+	type. Raise ValueError if the input is not a valid ASJP sequence and raise
+	TypeError if it is not a sequence. Usage:
+
+	>>> asjp2ipa('zEmy~E')
+	zamʲa
+	>>> asjp2ipa(tokenise('zEmy~E'))
+	['z', 'a', 'mʲ', 'a']
 
 	Part of the package's public API.
 	"""
-	pass
+	is_str = isinstance(asjp_seq, str)
+	if is_str:
+		asjp_seq = tokenise(asjp_seq)
+
+	if not isinstance(asjp_seq, list):
+		raise TypeError('string or list expected')
+
+	ipa_seq = [convert_asjp_token(token) for token in asjp_seq]
+
+	if is_str:
+		return ''.join(ipa_seq)
+	else:
+		return ipa_seq
 
 
 def tokenise_word(string):

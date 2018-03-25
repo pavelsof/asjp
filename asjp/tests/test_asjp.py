@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from asjp import ipa2asjp, tokenise
+from asjp import ipa2asjp, asjp2ipa, tokenise
 
 
 
@@ -33,6 +33,15 @@ class ApiTestCase(TestCase):
 		self.assertEqual(ipa2asjp('stəʊn'), 'st3un')
 		self.assertEqual(ipa2asjp('ɜːθ'), '38')
 		self.assertEqual(ipa2asjp('ˈfaɪə'), 'fEi3')
+
+	def test_asjp2ipa(self):
+		"""
+		ASJP strings should be converted into IPA-compliant strings.
+		"""
+		self.assertEqual(asjp2ipa(''), '')
+
+		self.assertEqual(asjp2ipa('sloncE'), 'slont͡sa')
+		self.assertEqual(asjp2ipa('zEmy~E'), 'zamʲa')
 
 	def test_tokenise(self):
 		"""
