@@ -20,12 +20,14 @@ class Chart:
 
 	def __init__(self):
 		"""
-		Init the instance's properties: two dicts mapping IPA symbols to their
-		ASJP counterparts and vice versa; and the set of ASJP letters.
+		Init the instance's properties: a dict mapping IPA symbols to their
+		ASJP counterparts and three dicts for the reverse mapping.
 		"""
-		self.ipa2asjp = {}
-		self.asjp2ipa = {}
-		self.asjp_letters = set()
+		self.ipa = {}
+
+		self.asjp_letters = {}
+		self.asjp_diacritics = {}
+		self.asjp_juxta_letters = {}
 
 	def load(self, path):
 		"""
@@ -34,9 +36,13 @@ class Chart:
 
 		- empty lines and lines starting with # are ignored;
 		- content lines should consist of tab-separated sub-strings, the first
-		  being an IPA symbol, the second its ASJP counterpart, and the
-		  presence of the optional third one indicating that the IPA symbol is
-		  also the ASJP's counterpart;
+		  being an IPA symbol, the second its ASJP counterpart, the (optional)
+		  third a marker;
+		- the marker ✓ indicates that the IPA symbol is also the ASJP's
+		  counterpart for the purposes of asjp2ipa conversion;
+		- the marker + indicates that the second symbol is an ASJP diacritic;
+		- the marker = indicates that the correspondence only applies in the
+		  context of an ASJP juxtaposition;
 		- content lines without a tab are ignored.
 		"""
 		with open(path, encoding='utf-8') as f:
@@ -45,55 +51,76 @@ class Chart:
 					continue
 
 				line = line.split('\t')
-				if len(line) < 2:
+
+				if len(line) == 2:
+					ipa_symbol, asjp_symbol = line
+					flag = ''
+				elif len(line) == 3:
+					ipa_symbol, asjp_symbol, flag = line
+				else:
 					continue
 
-				self.ipa2asjp[line[0].replace('ə͡'[1], '')] = line[1]
+				self.ipa[ipa_symbol.replace('ə͡'[1], '')] = asjp_symbol
 
-				if len(line) > 2:
-					self.asjp2ipa[line[1]] = line[0]
+				if flag == '✓':
+					self.asjp_letters[asjp_symbol] = ipa_symbol
+				elif flag == '+':
+					self.asjp_diacritics[asjp_symbol] = ipa_symbol
+				elif flag == '=':
+					self.asjp_juxta_letters[asjp_symbol] = ipa_symbol
 
-		self.asjp_letters = set(self.asjp2ipa.keys())
 
+def convert_ipa_token(token):
+	"""
+	Convert an IPA token into an ASJP token or raise ValueError if the input
+	does not constitute a valid IPA token.
+
+	Helper for ipa2asjp(ipa_seq).
+	"""
+	output = []
+	suffix = ''
+
+	for ix, char in enumerate(token):
+		if ipatok.ipa.is_letter(char, strict=False):
+			if ix > 1 and ipatok.ipa.is_tie_bar(token[ix-1]):
+				output[-1] = chart.ipa[token[ix-2]+char]
+			else:
+				output.append(chart.ipa[char])
+
+		elif char in chart.asjp_juxta_letters.values():
+			suffix = '$' if suffix else '~'
+			output.append(chart.ipa[char])
+
+		elif char in chart.asjp_diacritics.values():
+			output.append(chart.ipa[char])
+
+		elif char == 'n̪'[1] and ix and token[ix-1] == 'n':
+			output[-1] = chart.ipa['n̪']
+
+	return ''.join(output + [suffix])
 
 
 def ipa2asjp(ipa_seq):
 	"""
-	Convert an IPA sequence into an ASJP sequence.
+	Convert an IPA sequence (string or list) into an ASJP sequence of the same
+	type. Raise ValueError if the input is not a valid IPA sequence and raise
+	TypeError if it is not a sequence. Usage:
+
+	>>> ipa2asjp('zɛmʲa')
+	'zEmy~E'
+	>>> ipa2asjp(['z', 'ɛ', 'mʲ', 'a'])
+	['z', 'E', 'my~', 'E']
 
 	Part of the package's public API.
 	"""
-	def convert(token):
-		output = []
-		suffix = ''
-
-		for ix, char in enumerate(token):
-			if ipatok.ipa.is_letter(char, strict=False):
-				if ix > 1 and ipatok.ipa.is_tie_bar(token[ix-1]):
-					output[-1] = chart.ipa2asjp[token[ix-2]+char]
-				else:
-					output.append(chart.ipa2asjp[char])
-
-			elif char in 'ʰʷʲⁿ':
-				suffix = '$' if suffix else '~'
-				output.append(chart.ipa2asjp[char])
-
-			elif char == 'ʼ' or char == 'ə̃'[1]:
-				output.append(chart.ipa2asjp[char])
-
-			elif char == 'n̪'[1] and ix and token[ix-1] == 'n':
-				output[-1] = chart.ipa2asjp['n̪']
-
-		return ''.join(output + [suffix])
-
 	is_str = isinstance(ipa_seq, str)
 	if is_str:
 		ipa_seq = ipatok.tokenise(ipa_seq, replace=True)
 
 	if not isinstance(ipa_seq, list):
-		raise ValueError('')
+		raise TypeError('string or list expected')
 
-	asjp_seq = [convert(token) for token in ipa_seq]
+	asjp_seq = [convert_ipa_token(token) for token in ipa_seq]
 
 	if is_str:
 		return ''.join(asjp_seq)
@@ -115,8 +142,8 @@ def convert_asjp_token(token):
 	if len(token) > 1:
 		inferred_size = None
 
-		if token[-1] in '*"':
-			ipa_suffix += {'*': 'ə̃'[1], '"': 'ʼ'}[token[-1]]
+		if token[-1] in chart.asjp_diacritics:
+			ipa_suffix += chart.asjp_diacritics[token[-1]]
 			inferred_size = 2
 		elif token[-1] in '~$':
 			juxtaposed = True
@@ -128,10 +155,10 @@ def convert_asjp_token(token):
 		token = token[:-1]
 
 	for char in token:
-		if juxtaposed and char in 'hwyn':
-			output += {'h': 'ʰ', 'w': 'ʷ', 'y': 'ʲ', 'n': 'ⁿ'}[char]
-		elif char in chart.asjp2ipa:
-			output += chart.asjp2ipa[char]
+		if juxtaposed and char in chart.asjp_juxta_letters:
+			output += chart.asjp_juxta_letters[char]
+		elif char in chart.asjp_letters:
+			output += chart.asjp_letters[char]
 		else:
 			raise ValueError('invalid token {}'.format(token))
 
@@ -145,7 +172,7 @@ def asjp2ipa(asjp_seq):
 	TypeError if it is not a sequence. Usage:
 
 	>>> asjp2ipa('zEmy~E')
-	zamʲa
+	'zamʲa'
 	>>> asjp2ipa(tokenise('zEmy~E'))
 	['z', 'a', 'mʲ', 'a']
 
@@ -219,7 +246,7 @@ def tokenise(string):
 		try:
 			output.extend(tokenise_word(word))
 		except ValueError as err:
-			raise ValueError('Cannot tokenise {}: {!s}'.format(word, err))
+			raise ValueError('cannot tokenise {}: {!s}'.format(word, err))
 
 	return output
 
