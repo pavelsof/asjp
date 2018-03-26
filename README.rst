@@ -9,17 +9,18 @@ tokens.
 
 >>> from asjp import ipa2asjp, asjp2ipa, tokenise
 >>> ipa2asjp('zɛmʲa')
-'zEmy~E'
+'zEmy~a'
 >>> tokenise(ipa2asjp('zɛmʲa'))
-['z', 'E', 'my~', 'E']
+['z', 'E', 'my~', 'a']
 >>> ipa2asjp(['z', 'ɛ', 'mʲ', 'a']) == tokenise(ipa2asjp('zɛmʲa'))
 True
->>> asjp2ipa('zEmy~E')
-'zamʲa'
+>>> asjp2ipa('zEmy~a')
+'zɛmʲa'
 
 ASJPcode, now commonly known as ASJP, is a simplified transcription alphabet
-introduced and specified by `Brown et al. (2009)`_. It is used for transcribing
-the `ASJP Database`_ and in computational historical linguistics in general.
+introduced by `Brown et al. (2009)`_ and then further specified by `Brown et
+al. (2013)`. It is used for transcribing the `ASJP Database`_ and in
+computational historical linguistics in general.
 
 
 licence
@@ -29,4 +30,5 @@ MIT. Do as you please and praise the snake gods.
 
 
 .. _`Brown et al. (2009)`: https://doi.org/10.1524/stuf.2008.0026
+.. _`Brown et al. (2013)`: https://doi.org/10.1353/lan.2013.0009
 .. _`ASJP Database`: http://asjp.clld.org/

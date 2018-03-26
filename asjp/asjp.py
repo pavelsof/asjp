@@ -107,9 +107,9 @@ def ipa2asjp(ipa_seq):
 	TypeError if it is not a sequence. Usage:
 
 	>>> ipa2asjp('zɛmʲa')
-	'zEmy~E'
+	'zEmy~a'
 	>>> ipa2asjp(['z', 'ɛ', 'mʲ', 'a'])
-	['z', 'E', 'my~', 'E']
+	['z', 'E', 'my~', 'a']
 
 	Part of the package's public API.
 	"""
@@ -171,10 +171,10 @@ def asjp2ipa(asjp_seq):
 	type. Raise ValueError if the input is not a valid ASJP sequence and raise
 	TypeError if it is not a sequence. Usage:
 
-	>>> asjp2ipa('zEmy~E')
-	'zamʲa'
-	>>> asjp2ipa(tokenise('zEmy~E'))
-	['z', 'a', 'mʲ', 'a']
+	>>> asjp2ipa('zEmy~a')
+	'zɛmʲa'
+	>>> asjp2ipa(tokenise('zEmy~a'))
+	['z', 'ɛ', 'mʲ', 'a']
 
 	Part of the package's public API.
 	"""
@@ -234,8 +234,8 @@ def tokenise(string):
 	cannot be unambiguously tokenised. The input may consist of several words,
 	i.e. whitespace-separated sub-strings. Usage:
 
-	>>> tokenise('novE zEmy~E')
-	['n', 'o', 'v', 'E', 'z', 'E', 'my~', 'E']
+	>>> tokenise('nova zEmy~a')
+	['n', 'o', 'v', 'a', 'z', 'E', 'my~', 'a']
 
 	Part of the package's public API.
 	"""

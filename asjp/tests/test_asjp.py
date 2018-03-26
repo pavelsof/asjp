@@ -14,16 +14,16 @@ class ApiTestCase(TestCase):
 		ASJP counterparts are derived manually.
 		"""
 		self.assertEqual(ipa2asjp('sɫɤnt͡sɛ'), 'sloncE')
-		self.assertEqual(ipa2asjp('zvɛzda'), 'zvEzdE')
-		self.assertEqual(ipa2asjp('vɔda'), 'vodE')
-		self.assertEqual(ipa2asjp('kamɤk'), 'kEmok')
-		self.assertEqual(ipa2asjp('zɛmʲa'), 'zEmy~E')
+		self.assertEqual(ipa2asjp('zvɛzda'), 'zvEzda')
+		self.assertEqual(ipa2asjp('vɔda'), 'voda')
+		self.assertEqual(ipa2asjp('kamɤk'), 'kamok')
+		self.assertEqual(ipa2asjp('zɛmʲa'), 'zEmy~a')
 		self.assertEqual(ipa2asjp('ɔɡɤn'), 'ogon')
 
 		self.assertEqual(ipa2asjp('zɔnə'), 'zon3')
 		self.assertEqual(ipa2asjp('ʃtɐn'), 'Stan')
-		self.assertEqual(ipa2asjp('vasɐ'), 'vEsa')
-		self.assertEqual(ipa2asjp('ʃtaɪ̯n'), 'StEin')
+		self.assertEqual(ipa2asjp('vasɐ'), 'vasa')
+		self.assertEqual(ipa2asjp('ʃtaɪ̯n'), 'Stain')
 		self.assertEqual(ipa2asjp('ɛɐ̯də'), 'Ead3')
 		self.assertEqual(ipa2asjp('fɔʏ̯ɐ'), 'foia')
 
@@ -32,7 +32,7 @@ class ApiTestCase(TestCase):
 		self.assertEqual(ipa2asjp('ˈwɔːtə'), 'wot3')
 		self.assertEqual(ipa2asjp('stəʊn'), 'st3un')
 		self.assertEqual(ipa2asjp('ɜːθ'), '38')
-		self.assertEqual(ipa2asjp('ˈfaɪə'), 'fEi3')
+		self.assertEqual(ipa2asjp('ˈfaɪə'), 'fai3')
 
 	def test_asjp2ipa(self):
 		"""
@@ -40,8 +40,8 @@ class ApiTestCase(TestCase):
 		"""
 		self.assertEqual(asjp2ipa(''), '')
 
-		self.assertEqual(asjp2ipa('sloncE'), 'slont͡sa')
-		self.assertEqual(asjp2ipa('zEmy~E'), 'zamʲa')
+		self.assertEqual(asjp2ipa('sloncE'), 'slont͡sɛ')
+		self.assertEqual(asjp2ipa('zEmy~a'), 'zɛmʲa')
 
 	def test_tokenise(self):
 		"""
