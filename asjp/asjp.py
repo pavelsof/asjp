@@ -78,7 +78,6 @@ def convert_ipa_token(token):
 	Helper for ipa2asjp(ipa_seq).
 	"""
 	output = []
-	suffix = ''
 
 	for ix, char in enumerate(token):
 		if ipatok.ipa.is_letter(char, strict=False):
@@ -87,17 +86,24 @@ def convert_ipa_token(token):
 			else:
 				output.append(chart.ipa[char])
 
-		elif char in chart.asjp_juxta_letters.values():
-			suffix = '$' if suffix else '~'
-			output.append(chart.ipa[char])
-
-		elif char in chart.asjp_diacritics.values():
-			output.append(chart.ipa[char])
-
 		elif char == 'n̪'[1] and ix and token[ix-1] == 'n':
 			output[-1] = chart.ipa['n̪']
 
-	return ''.join(output + [suffix])
+		elif char in chart.ipa:
+			output.append(chart.ipa[char])
+
+	if sum([1 for char in output if char in chart.asjp_diacritics]):
+		if len(output) != 2:
+			raise ValueError('invalid token {}'.format(token))
+	else:
+		if len(output) == 2:
+			output.append('~')
+		elif len(output) == 3:
+			output.append('$')
+		elif len(output) != 1:
+			raise ValueError('invalid token {}'.format(token))
+
+	return ''.join(output)
 
 
 def ipa2asjp(ipa_seq):

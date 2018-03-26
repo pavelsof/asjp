@@ -43,5 +43,6 @@ setup(
 	install_requires = ['ipatok'],
 	python_requires = '>=3',
 
-	test_suite = 'asjp.tests'
+	test_suite = 'asjp.tests',
+	tests_require = ['hypothesis >= 3.52']
 )
