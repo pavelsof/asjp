@@ -1,7 +1,9 @@
 import os.path
 import unicodedata
 
-import ipatok
+from ipatok.ipa import is_letter, is_tie_bar, replace_substitutes
+from ipatok.tokens import normalise
+from ipatok import tokenise as tokenise_ipa
 
 
 
@@ -78,30 +80,41 @@ def convert_ipa_token(token):
 	Helper for ipa2asjp(ipa_seq).
 	"""
 	output = []
+	has_tie_bar = False
 
-	for ix, char in enumerate(token):
-		if ipatok.ipa.is_letter(char, strict=False):
-			if ix > 1 and ipatok.ipa.is_tie_bar(token[ix-1]):
-				output[-1] = chart.ipa[token[ix-2]+char]
-			else:
+	try:
+		for char in token:
+			if is_letter(char):
+				if has_tie_bar:
+					affricate = output[-1] + char
+					if affricate in chart.ipa:
+						output[-1] = chart.ipa[affricate]
+					has_tie_bar = False
+				else:
+					output.append(chart.ipa[char])
+
+			elif is_tie_bar(char):
+				has_tie_bar = True
+
+			elif char == 'n̪'[1] and output[-1] == 'n':
+				output[-1] = chart.ipa['n̪']
+
+			elif char in chart.ipa:
 				output.append(chart.ipa[char])
+	except IndexError:
+		raise ValueError('invalid token {}'.format(token))
 
-		elif char == 'n̪'[1] and ix and token[ix-1] == 'n':
-			output[-1] = chart.ipa['n̪']
-
-		elif char in chart.ipa:
-			output.append(chart.ipa[char])
-
-	if sum([1 for char in output if char in chart.asjp_diacritics]):
-		if len(output) != 2:
-			raise ValueError('invalid token {}'.format(token))
-	else:
-		if len(output) == 2:
+	try:
+		if sum([1 for char in output if char in chart.asjp_diacritics]):
+			assert len(output) == 2
+		elif len(output) == 2:
 			output.append('~')
 		elif len(output) == 3:
 			output.append('$')
-		elif len(output) != 1:
-			raise ValueError('invalid token {}'.format(token))
+		else:
+			assert len(output) == 1
+	except AssertionError:
+		raise ValueError('invalid token {}'.format(token))
 
 	return ''.join(output)
 
@@ -119,19 +132,27 @@ def ipa2asjp(ipa_seq):
 
 	Part of the package's public API.
 	"""
-	is_str = isinstance(ipa_seq, str)
-	if is_str:
-		ipa_seq = ipatok.tokenise(ipa_seq, replace=True)
+	if isinstance(ipa_seq, str):
+		output = []
 
-	if not isinstance(ipa_seq, list):
-		raise TypeError('string or list expected')
+		for ipa_word in ipa_seq.strip().split():
+			output.append(''.join([
+				convert_ipa_token(token)
+				for token in tokenise_ipa(ipa_word, replace=True)]))
 
-	asjp_seq = [convert_ipa_token(token) for token in ipa_seq]
+		return ' '.join(output)
 
-	if is_str:
-		return ''.join(asjp_seq)
+	elif isinstance(ipa_seq, list):
+		output = []
+
+		for token in ipa_seq:
+			token = replace_substitutes(normalise(token))
+			output.append(convert_ipa_token(token))
+
+		return output
+
 	else:
-		return asjp_seq
+		raise TypeError('string or list expected')
 
 
 def convert_asjp_token(token):
@@ -184,19 +205,20 @@ def asjp2ipa(asjp_seq):
 
 	Part of the package's public API.
 	"""
-	is_str = isinstance(asjp_seq, str)
-	if is_str:
-		asjp_seq = tokenise(asjp_seq)
+	if isinstance(asjp_seq, str):
+		output = []
 
-	if not isinstance(asjp_seq, list):
-		raise TypeError('string or list expected')
+		for asjp_word in asjp_seq.strip().split():
+			output.append(''.join([
+				convert_asjp_token(token) for token in tokenise(asjp_word)]))
 
-	ipa_seq = [convert_asjp_token(token) for token in asjp_seq]
+		return ' '.join(output)
 
-	if is_str:
-		return ''.join(ipa_seq)
+	elif isinstance(asjp_seq, list):
+		return [convert_asjp_token(token) for token in asjp_seq]
+
 	else:
-		return ipa_seq
+		raise TypeError('string or list expected')
 
 
 def tokenise_word(string):

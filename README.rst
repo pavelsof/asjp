@@ -27,8 +27,8 @@ what is this?
 
 ASJPcode, more commonly referred to as the ASJP alphabet or simply as ASJP, is
 a simplified transcription alphabet introduced in `Brown et al. (2008)`_ and
-then slightly modified in `Brown et al. (2013)`_; the latter is considered as
-the alphabet's spec for the purposes of this package.
+then slightly modified in `Brown et al. (2013)`_; the latter is considered the
+alphabet's spec for the purposes of this package.
 
 The ASJP alphabet is used for transcribing the `ASJP Database`_, an actively
 developed database aiming to provide the translations of a set of 40 basic
@@ -58,7 +58,7 @@ see also
 ========
 
 - `lingpy`_ is an extensive library for computational historical linguistics
-  that also includes functions for converting IPA to ASJP.
+  that includes functions for converting IPA to ASJP.
 - `ipatok`_ is a library for tokenising IPA strings used by the ``ipa2asjp``
   function for handling string input.
 

@@ -42,48 +42,59 @@ def asjp_tokens(draw):
 
 class ApiTestCase(TestCase):
 
-	def test_ipa2asjp(self):
+	def test_ipa2asjp_strings(self):
 		"""
 		IPA-compliant strings should be correctly converted to ASJP.
 
-		The IPA strings are sourced from NorthEuraLex (bul, deu, eng), their
+		The IPA strings are sourced from NorthEuraLex (bul, che, deu), their
 		ASJP counterparts are derived manually.
 		"""
-		self.assertEqual(ipa2asjp(''), '')
-
 		self.assertEqual(ipa2asjp('sɫɤnt͡sɛ'), 'sloncE')
 		self.assertEqual(ipa2asjp('zvɛzda'), 'zvEzda')
-		self.assertEqual(ipa2asjp('vɔda'), 'voda')
-		self.assertEqual(ipa2asjp('kamɤk'), 'kamok')
 		self.assertEqual(ipa2asjp('zɛmʲa'), 'zEmy~a')
 		self.assertEqual(ipa2asjp('ɔɡɤn'), 'ogon')
+		self.assertEqual(ipa2asjp('javʲa sɛ'), 'yavy~a sE')
+
+		self.assertEqual(ipa2asjp('motː'), 'mot')
+		self.assertEqual(ipa2asjp('t͡ʃʼenɪɡ'), 'C"enig')
+		self.assertEqual(ipa2asjp('bu͡ʊqʼ'), 'buq"')
+		self.assertEqual(ipa2asjp('tʼu͡ʊlɡ'), 't"ulg')
+		self.assertEqual(ipa2asjp('bu͡ʊt͡s'), 'buc')
 
 		self.assertEqual(ipa2asjp('zɔnə'), 'zon3')
-		self.assertEqual(ipa2asjp('ʃtɐn'), 'Stan')
 		self.assertEqual(ipa2asjp('vasɐ'), 'vasa')
 		self.assertEqual(ipa2asjp('ʃtaɪ̯n'), 'Stain')
 		self.assertEqual(ipa2asjp('ɛɐ̯də'), 'Ead3')
 		self.assertEqual(ipa2asjp('fɔʏ̯ɐ'), 'foia')
 
-		self.assertEqual(ipa2asjp('sʌn'), 'son')
-		self.assertEqual(ipa2asjp('stɑː'), 'sto')
-		self.assertEqual(ipa2asjp('ˈwɔːtə'), 'wot3')
-		self.assertEqual(ipa2asjp('stəʊn'), 'st3un')
-		self.assertEqual(ipa2asjp('ɜːθ'), '38')
-		self.assertEqual(ipa2asjp('ˈfaɪə'), 'fai3')
+	def test_ipa2asjp_lists(self):
+		"""
+		IPA-compliant tokens should be correctly converted to ASJP tokens.
+		"""
+		self.assertEqual(ipa2asjp(['s', 'ɫ', 'ɤ', 'n', 't͡s', 'ɛ']), ['s', 'l', 'o', 'n', 'c', 'E'])
+		self.assertEqual(ipa2asjp(['z', 'ɛ', 'mʲ', 'a']), ['z', 'E', 'my~', 'a'])
 
-	def test_asjp2ipa(self):
+		self.assertEqual(ipa2asjp(['t͡ʃʼ', 'e', 'n', 'ɪ', 'ɡ']), ['C"', 'e', 'n', 'i', 'g'])
+		self.assertEqual(ipa2asjp(['b', 'u͡ʊ', 'qʼ']), ['b', 'u', 'q"'])
+
+		self.assertEqual(ipa2asjp(['ʃ', 't', 'a', 'ɪ̯', 'n']), ['S', 't', 'a', 'i', 'n'])
+		self.assertEqual(ipa2asjp(['ʃ', 't', 'a͡ɪ̯', 'n']), ['S', 't', 'a', 'n'])
+
+	def test_asjp2ipa_strings(self):
 		"""
 		ASJP strings should be converted into IPA-compliant strings.
 		"""
-		self.assertEqual(asjp2ipa(''), '')
-
 		self.assertEqual(asjp2ipa('sloncE'), 'slont͡sɛ')
 		self.assertEqual(asjp2ipa('zvEzda'), 'zvɛzda')
-		self.assertEqual(asjp2ipa('voda'), 'voda')
-		self.assertEqual(asjp2ipa('kamok'), 'kamok')
 		self.assertEqual(asjp2ipa('zEmy~a'), 'zɛmʲa')
-		self.assertEqual(asjp2ipa('ogon'), 'oɡon')
+		self.assertEqual(asjp2ipa('yavy~a sE'), 'javʲa sɛ')
+
+	def test_asjp2ipa_lists(self):
+		"""
+		ASJP tokens should be converted into IPA-compliant tokens.
+		"""
+		self.assertEqual(asjp2ipa(['s', 'l', 'o', 'n', 'c', 'E']), ['s', 'l', 'o', 'n', 't͡s', 'ɛ'])
+		self.assertEqual(asjp2ipa(['z', 'E', 'my~', 'a']), ['z', 'ɛ', 'mʲ', 'a'])
 
 	@given(lists(asjp_tokens()))
 	def test_asjp_ipa_asjp(self, tokens):
