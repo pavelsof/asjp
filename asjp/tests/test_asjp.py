@@ -49,6 +49,8 @@ class ApiTestCase(TestCase):
 		The IPA strings are sourced from NorthEuraLex (bul, che, deu), their
 		ASJP counterparts are derived manually.
 		"""
+		self.assertEqual(ipa2asjp(''), '')
+
 		self.assertEqual(ipa2asjp('sɫɤnt͡sɛ'), 'sloncE')
 		self.assertEqual(ipa2asjp('zvɛzda'), 'zvEzda')
 		self.assertEqual(ipa2asjp('zɛmʲa'), 'zEmy~a')
@@ -71,6 +73,8 @@ class ApiTestCase(TestCase):
 		"""
 		IPA-compliant tokens should be correctly converted to ASJP tokens.
 		"""
+		self.assertEqual(ipa2asjp([]), [])
+
 		self.assertEqual(ipa2asjp(['s', 'ɫ', 'ɤ', 'n', 't͡s', 'ɛ']), ['s', 'l', 'o', 'n', 'c', 'E'])
 		self.assertEqual(ipa2asjp(['z', 'ɛ', 'mʲ', 'a']), ['z', 'E', 'my~', 'a'])
 
@@ -80,10 +84,28 @@ class ApiTestCase(TestCase):
 		self.assertEqual(ipa2asjp(['ʃ', 't', 'a', 'ɪ̯', 'n']), ['S', 't', 'a', 'i', 'n'])
 		self.assertEqual(ipa2asjp(['ʃ', 't', 'a͡ɪ̯', 'n']), ['S', 't', 'a', 'n'])
 
+	def test_ipa2asjp_errors(self):
+		"""
+		Non-IPA sequences should raise ValueError and non-sequences should
+		raise TypeError.
+		"""
+		for item in [None, True, 42]:
+			with self.assertRaises(TypeError):
+				ipa2asjp(item)
+
+		for item in ['zEmy~a', 'павел']:
+			with self.assertRaises(ValueError):
+				ipa2asjp(item)
+
+		for item in [['z', 'E', 'my~', 'a'], ['п']]:
+			with self.assertRaises(ValueError):
+				ipa2asjp(item)
+
 	def test_asjp2ipa_strings(self):
 		"""
 		ASJP strings should be converted into IPA-compliant strings.
 		"""
+		self.assertEqual(asjp2ipa(''), '')
 		self.assertEqual(asjp2ipa('sloncE'), 'slont͡sɛ')
 		self.assertEqual(asjp2ipa('zvEzda'), 'zvɛzda')
 		self.assertEqual(asjp2ipa('zEmy~a'), 'zɛmʲa')
@@ -93,8 +115,26 @@ class ApiTestCase(TestCase):
 		"""
 		ASJP tokens should be converted into IPA-compliant tokens.
 		"""
+		self.assertEqual(asjp2ipa([]), [])
 		self.assertEqual(asjp2ipa(['s', 'l', 'o', 'n', 'c', 'E']), ['s', 'l', 'o', 'n', 't͡s', 'ɛ'])
 		self.assertEqual(asjp2ipa(['z', 'E', 'my~', 'a']), ['z', 'ɛ', 'mʲ', 'a'])
+
+	def test_asjp2ipa_errors(self):
+		"""
+		Non-ASJP sequences should raise ValueError and non-sequences should
+		raise TypeError.
+		"""
+		for item in [None, True, 42]:
+			with self.assertRaises(TypeError):
+				asjp2ipa(item)
+
+		for item in ['zɛmʲa', 'павел']:
+			with self.assertRaises(ValueError):
+				asjp2ipa(item)
+
+		for item in [['z', 'ɛ', 'mʲ', 'a'], ['п']]:
+			with self.assertRaises(ValueError):
+				asjp2ipa(item)
 
 	@given(lists(asjp_tokens()))
 	def test_asjp_ipa_asjp(self, tokens):
@@ -106,18 +146,24 @@ class ApiTestCase(TestCase):
 
 	def test_tokenise(self):
 		"""
-		ASJP strings should be correctly tokenised and non-compliant strings
-		should raise ValueError.
+		ASJP strings should be correctly tokenised.
 		"""
 		self.assertEqual(tokenise(''), [])
-		self.assertEqual(tokenise('novE zEmy~E'), ['n', 'o', 'v', 'E', 'z', 'E', 'my~', 'E'])
+		self.assertEqual(tokenise('nova zEmy~a'), ['n', 'o', 'v', 'a', 'z', 'E', 'my~', 'a'])
 		self.assertEqual(tokenise('a*kw~ndy$k"'), ['a*', 'kw~', 'ndy$', 'k"'])
 
-		with self.assertRaises(ValueError): tokenise('*a')
-		with self.assertRaises(ValueError): tokenise('"p')
-		with self.assertRaises(ValueError): tokenise('a~')
-		with self.assertRaises(ValueError): tokenise('aa$')
-		with self.assertRaises(ValueError): tokenise('a~$')
+	def test_tokenise_errors(self):
+		"""
+		Non-ASJP strings should raise ValueError and non-strings should raise
+		TypeError.
+		"""
+		for item in [None, True, 42]:
+			with self.assertRaises(TypeError):
+				tokenise(item)
+
+		for item in ['*a', '"p', 'a~', 'aa$', 'a~$']:
+			with self.assertRaises(ValueError):
+				tokenise(item)
 
 	@given(lists(asjp_tokens()))
 	def test_tokenise_generated(self, tokens):
