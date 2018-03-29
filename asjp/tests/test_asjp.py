@@ -46,8 +46,8 @@ class ApiTestCase(TestCase):
 		"""
 		IPA-compliant strings should be correctly converted to ASJP.
 
-		The IPA strings are sourced from NorthEuraLex (bul, che, deu), their
-		ASJP counterparts are derived manually.
+		The IPA strings are sourced from NorthEuraLex (bul, che, deu, swe),
+		their ASJP counterparts are derived manually.
 		"""
 		self.assertEqual(ipa2asjp(''), '')
 
@@ -69,6 +69,10 @@ class ApiTestCase(TestCase):
 		self.assertEqual(ipa2asjp('ɛɐ̯də'), 'Ead3')
 		self.assertEqual(ipa2asjp('fɔʏ̯ɐ'), 'foia')
 
+		self.assertEqual(ipa2asjp('ɧɪnː'), 'Sx~in')
+		self.assertEqual(ipa2asjp('ɧæːɳa'), 'Sx~Ena')
+		self.assertEqual(ipa2asjp('ɔtːɧɪlɪɡ'), 'otSx~ilig')
+
 	def test_ipa2asjp_lists(self):
 		"""
 		IPA-compliant tokens should be correctly converted to ASJP tokens.
@@ -83,6 +87,9 @@ class ApiTestCase(TestCase):
 
 		self.assertEqual(ipa2asjp(['ʃ', 't', 'a', 'ɪ̯', 'n']), ['S', 't', 'a', 'i', 'n'])
 		self.assertEqual(ipa2asjp(['ʃ', 't', 'a͡ɪ̯', 'n']), ['S', 't', 'a', 'n'])
+
+		self.assertEqual(ipa2asjp(['ɧ', 'ɪ', 'nː']), ['Sx~', 'i', 'n'])
+		self.assertEqual(ipa2asjp(['ɔ', 'tː', 'ɧ', 'ɪ', 'l', 'ɪ', 'ɡ']), ['o', 't', 'Sx~', 'i', 'l', 'i', 'g'])
 
 	def test_ipa2asjp_errors(self):
 		"""

@@ -45,7 +45,6 @@ class Chart:
 		- the marker + indicates that the second symbol is an ASJP diacritic;
 		- the marker = indicates that the correspondence only applies in the
 		  context of an ASJP juxtaposition;
-		- content lines without a tab are ignored.
 		"""
 		with open(path, encoding='utf-8') as f:
 			for line in map(lambda x: x.strip(), f):
@@ -90,7 +89,8 @@ def convert_ipa_token(token):
 					output[-1] = chart.ipa[affricate]
 				has_tie_bar = False
 			else:
-				output.append(chart.ipa[char])
+				for asjp_char in chart.ipa[char]:
+					output.append(asjp_char)
 
 		elif is_tie_bar(char):
 			has_tie_bar = True

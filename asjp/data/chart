@@ -6,10 +6,10 @@ m	m	✓
 ɸ	p
 β	b
 ɱ	m
-ⱱ
+ⱱ	v
 f	f	✓
 v	v	✓
-ʋ
+ʋ	v
 t	t	✓
 d	d	✓
 n	n	✓
@@ -36,8 +36,8 @@ l	l	✓
 c	T	✓
 ɟ	T
 ɲ	5	✓
-ç
-ʝ
+ç	S
+ʝ	Z
 j	y	✓
 ʎ	L
 k	k	✓
@@ -45,7 +45,7 @@ k	k	✓
 ŋ	N	✓
 x	x	✓
 ɣ	x
-ɰ
+ɰ	w
 ʟ	L	✓
 q	q	✓
 ɢ	G	✓
@@ -64,7 +64,9 @@ n̪	4	✓
 t͡s	c	✓
 d͡z	c
 t͡ʃ	C	✓
+t͡ɕ	C
 d͡ʒ	j	✓
+d͡ʑ	j
 
 # IPA section: consonants (non-pulmonic)
 ʘ	!
@@ -72,23 +74,23 @@ d͡ʒ	j	✓
 ǃ	!	✓
 ǂ	!
 ǁ	!
-ɓ
-ɗ
-ʄ
-ɠ
-ʛ
+ɓ	b
+ɗ	d
+ʄ	T
+ɠ	g
+ʛ	G
 
 # IPA section: other symbols
-ʍ
+ʍ	w
 w	w	✓
-ɥ
-ʜ
-ʢ
-ʡ
-ɕ
-ʑ
-ɺ
-ɧ
+ɥ	y
+ʜ	X
+ʢ	X
+ʡ	7
+ɕ	S
+ʑ	Z
+ɺ	L
+ɧ	Sx
 
 # IPA section: vowels
 i	i	✓
