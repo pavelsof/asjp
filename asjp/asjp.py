@@ -99,16 +99,16 @@ def convert_ipa_token(token):
 			output[-1] = chart.ipa['n̪']
 
 		elif char in chart.ipa:
-			output.append(chart.ipa[char])
+			asjp_char = chart.ipa[char]
+			if asjp_char in chart.asjp_diacritics:
+				output[-1] += asjp_char
+			else:
+				output.append(asjp_char)
 
-	if sum([1 for char in output if char in chart.asjp_diacritics]):
-		assert len(output) == 2
-	elif len(output) == 2:
-		output.append('~')
-	elif len(output) == 3:
-		output.append('$')
-	else:
-		assert len(output) == 1
+	assert 1 <= len(output) <= 3
+
+	if len(output) != 1:
+		output.append('~' if len(output) == 2 else '$')
 
 	return ''.join(output)
 
@@ -161,29 +161,24 @@ def convert_asjp_token(token):
 	Helper for asjp2ipa(asjp_seq).
 	"""
 	juxtaposed = False
-	ipa_suffix = ''
 	output = ''
 
-	if len(token) > 1:
-		inferred_size = 0
-
-		if token[-1] in chart.asjp_diacritics:
-			ipa_suffix = chart.asjp_diacritics[token[-1]]
-			inferred_size = 2
-		elif token[-1] in '~$':
-			juxtaposed = True
-			inferred_size = 3 if token[-1] == '~' else 4
-
-		assert len(token) == inferred_size
+	if token[-1] in '~$':
+		juxtaposed = True
 		token = token[:-1]
+		token = token.replace('Sx', 'ɧ')
 
 	for char in token:
 		if juxtaposed and char in chart.asjp_juxta_letters:
 			output += chart.asjp_juxta_letters[char]
+		elif char in chart.asjp_diacritics:
+			output += chart.asjp_diacritics[char]
+		elif char == 'ɧ':
+			output += char
 		else:
 			output += chart.asjp_letters[char]
 
-	return output + ipa_suffix
+	return output
 
 
 def asjp2ipa(asjp_seq):
