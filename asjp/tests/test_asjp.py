@@ -3,6 +3,8 @@ from unittest import TestCase
 from hypothesis.strategies import composite, lists, sampled_from
 from hypothesis import assume, example, given
 
+import ipatok
+
 from asjp.asjp import chart
 from asjp import ipa2asjp, asjp2ipa, tokenise
 
@@ -41,13 +43,14 @@ def asjp_tokens(draw):
 
 
 class ApiTestCase(TestCase):
+	"""
+	The IPA strings are sourced from NorthEuraLex (bul, che, deu, lez, swe),
+	their ASJP counterparts are derived manually.
+	"""
 
 	def test_ipa2asjp_strings(self):
 		"""
 		IPA-compliant strings should be correctly converted to ASJP.
-
-		The IPA strings are sourced from NorthEuraLex (bul, che, deu, lez,
-		swe), their ASJP counterparts are derived manually.
 		"""
 		self.assertEqual(ipa2asjp(''), '')
 
@@ -208,3 +211,11 @@ class ApiTestCase(TestCase):
 		tokenised back.
 		"""
 		self.assertEqual(tokenise(''.join(tokens)), tokens)
+
+	def test_tokenise_ipa(self):
+		"""
+		Tokenising the IPA input or the ASJP output should be equivalent.
+		"""
+		for string in ['sɫɤnt͡sɛ', 'tʼu͡ʊlɡ', 'fɔʏ̯ɐ', 't͡sʼʷelin ttar', 'ɧɪnː']:
+			tokens = ipatok.tokenise(string, replace=True)
+			self.assertEqual(tokenise(ipa2asjp(string)), ipa2asjp(tokens))

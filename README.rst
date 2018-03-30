@@ -2,10 +2,10 @@
 asjp
 ====
 
-A library of three functions. ``ipa2asjp`` takes an IPA-encoded sequence
-(string or list) and converts it into an ASJP-encoded sequence of the same
-type. ``asjp2ipa`` tries to do the opposite. ``tokenise`` takes an ASJP-encoded
-string and returns a list of tokens.
+A library of three functions. ``ipa2asjp`` takes an IPA-encoded sequence and
+converts it into an ASJP-encoded sequence. ``asjp2ipa`` tries to do the
+opposite. ``tokenise`` takes an ASJP-encoded string and returns a list of
+tokens.
 
 >>> from asjp import ipa2asjp, asjp2ipa, tokenise
 >>> ipa2asjp('zɛmʲa')
@@ -35,6 +35,27 @@ developed database aiming to provide the translations of a set of 40 basic
 concepts into all the world's languages. Both alphabet and database are
 employed in the field of computational historical linguistics, e.g. in `Jäger
 (2013)`_ or `Wichmann et al. (2011)`_.
+
+
+api
+===
+
+``ipa2asjp(ipa_seq)`` takes an IPA string or sequence of string tokens and
+converts it into an ASJP string or sequence of string tokens. In the common
+scenario where you have IPA strings and you want to end up with lists of ASJP
+tokens, you can either use `ipatok`_ to tokenise the IPA strings before running
+these through ``ipa2asjp``, or you can do that first and then tokenise the ASJP
+strings using ``tokenise``; the output should be identical.
+
+``asjp2ipa(asjp_seq)`` takes an ASJP string or sequence of string tokens and
+converts it into an IPA string or sequence of string tokens. As ASJP encodes
+much less information than IPA, something like ``asjp2ipa(ipa2asjp(ipa_seq)) ==
+ipa_seq`` would rarely hold true.
+
+``tokenise(asjp_string)`` takes an ASJP string and converts it into a list of
+ASJP tokens.
+
+``tokenize(asjp_string)`` is an alias for ``tokenise(asjp_string)``.
 
 
 installation
