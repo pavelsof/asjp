@@ -29,7 +29,7 @@ setup(
 	license = 'MIT',
 
 	classifiers = [
-		'Development Status :: 3 - Alpha',
+		'Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
 		'Intended Audience :: Science/Research',
 		'License :: OSI Approved :: MIT License',
@@ -41,7 +41,7 @@ setup(
 	packages = find_packages(),
 	package_data = {'asjp': ['data/*']},
 
-	install_requires = ['ipatok'],
+	install_requires = ['ipatok >= 0.2'],
 	python_requires = '>=3',
 
 	test_suite = 'asjp.tests',

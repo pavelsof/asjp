@@ -41,16 +41,12 @@ api
 ===
 
 ``ipa2asjp(ipa_seq)`` takes an IPA string or sequence of string tokens and
-converts it into an ASJP string or sequence of string tokens. In the common
-scenario where you have IPA strings and you want to end up with lists of ASJP
-tokens, you can either use `ipatok`_ to tokenise the IPA strings before running
-these through ``ipa2asjp``, or you can do that first and then tokenise the ASJP
-strings using ``tokenise``; the output should be identical.
+converts it into an ASJP string or sequence of string tokens.
 
 ``asjp2ipa(asjp_seq)`` takes an ASJP string or sequence of string tokens and
 converts it into an IPA string or sequence of string tokens. As ASJP encodes
-much less information than IPA, something like ``asjp2ipa(ipa2asjp(ipa_seq)) ==
-ipa_seq`` would rarely hold true.
+much less information than IPA, something like
+``asjp2ipa(ipa2asjp(ipa_seq)) == ipa_seq`` would rarely hold true.
 
 ``tokenise(asjp_string)`` takes an ASJP string and converts it into a list of
 ASJP tokens.
