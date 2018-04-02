@@ -44,8 +44,8 @@ def asjp_tokens(draw):
 
 class ApiTestCase(TestCase):
 	"""
-	The IPA strings are sourced from NorthEuraLex (bul, che, deu, lez, swe),
-	their ASJP counterparts are derived manually.
+	The IPA strings are sourced from NorthEuraLex (bul, che, deu, hin, lez,
+	swe), their ASJP counterparts are derived manually.
 	"""
 
 	def test_ipa2asjp_strings(self):
@@ -72,6 +72,9 @@ class ApiTestCase(TestCase):
 		self.assertEqual(ipa2asjp('ɛɐ̯də'), 'Ead3')
 		self.assertEqual(ipa2asjp('fɔʏ̯ɐ'), 'foia')
 
+		self.assertEqual(ipa2asjp('ãːkʰ'), 'a*kh~')
+		self.assertEqual(ipa2asjp('ɖʰʊ̄̃ɽʰənaː'), 'dh~u*rh~3na')
+
 		self.assertEqual(ipa2asjp('qʼʷetʼ'), 'q"w~et"')
 		self.assertEqual(ipa2asjp('wat͡sʼ'), 'wac"')
 		self.assertEqual(ipa2asjp('t͡sʼʷelin ttar'), 'c"w~elin ttar')
@@ -95,6 +98,9 @@ class ApiTestCase(TestCase):
 
 		self.assertEqual(ipa2asjp(['ʃ', 't', 'a', 'ɪ̯', 'n']), ['S', 't', 'a', 'i', 'n'])
 		self.assertEqual(ipa2asjp(['ʃ', 't', 'a͡ɪ̯', 'n']), ['S', 't', 'a', 'n'])
+
+		self.assertEqual(ipa2asjp(['ãː', 'kʰ']), ['a*', 'kh~'])
+		self.assertEqual(ipa2asjp(['ɖʰ', 'ʊ̄̃', 'ɽʰ', 'ə', 'n', 'aː']), ['dh~', 'u*', 'rh~', '3', 'n', 'a'])
 
 		self.assertEqual(ipa2asjp(['qʼʷ', 'e', 'tʼ']), ['q"w~', 'e', 't"'])
 		self.assertEqual(ipa2asjp(['w', 'a', 't͡sʼ']), ['w', 'a', 'c"'])
@@ -129,6 +135,9 @@ class ApiTestCase(TestCase):
 		self.assertEqual(asjp2ipa('zvEzda'), 'zvɛzda')
 		self.assertEqual(asjp2ipa('zEmy~a'), 'zɛmʲa')
 		self.assertEqual(asjp2ipa('yavy~a sE'), 'javʲa sɛ')
+
+		self.assertEqual(asjp2ipa('a*kh~'), 'ãkʰ')
+		self.assertEqual(asjp2ipa('dh~u*rh~3na'), 'dʰũrʰəna')
 
 		self.assertEqual(asjp2ipa('q"w~et"'), 'qʼʷetʼ')
 		self.assertEqual(asjp2ipa('wac"'), 'wat͡sʼ')
@@ -216,6 +225,6 @@ class ApiTestCase(TestCase):
 		"""
 		Tokenising the IPA input or the ASJP output should be equivalent.
 		"""
-		for string in ['sɫɤnt͡sɛ', 'tʼu͡ʊlɡ', 'fɔʏ̯ɐ', 't͡sʼʷelin ttar', 'ɧɪnː']:
+		for string in ['sɫɤnt͡sɛ', 'tʼu͡ʊlɡ', 'fɔʏ̯ɐ', 'ɖʰʊ̄̃ɽʰənaː', 't͡sʼʷelin ttar', 'ɧɪnː']:
 			tokens = ipatok.tokenise(string, replace=True)
 			self.assertEqual(tokenise(ipa2asjp(string)), ipa2asjp(tokens))
