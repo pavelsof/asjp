@@ -60,7 +60,7 @@ installation
 This is a standard Python 3 package with a single dependency, `ipatok`_. It is
 offered at the `Cheese Shop`_, so you can install it with pip::
 
-    pip install ipatok
+    pip install asjp
 
 or, alternatively, you can clone this repo (safe to delete afterwards) and do::
 
