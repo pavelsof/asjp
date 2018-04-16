@@ -89,6 +89,7 @@ class ApiTestCase(TestCase):
 		IPA-compliant tokens should be correctly converted to ASJP tokens.
 		"""
 		self.assertEqual(ipa2asjp([]), [])
+		self.assertEqual(ipa2asjp(['']), [''])
 
 		self.assertEqual(ipa2asjp(['s', 'ɫ', 'ɤ', 'n', 't͡s', 'ɛ']), ['s', 'l', 'o', 'n', 'c', 'E'])
 		self.assertEqual(ipa2asjp(['z', 'ɛ', 'mʲ', 'a']), ['z', 'E', 'my~', 'a'])
@@ -152,6 +153,7 @@ class ApiTestCase(TestCase):
 		ASJP tokens should be converted into IPA-compliant tokens.
 		"""
 		self.assertEqual(asjp2ipa([]), [])
+		self.assertEqual(asjp2ipa(['']), [''])
 
 		self.assertEqual(asjp2ipa(['s', 'l', 'o', 'n', 'c', 'E']), ['s', 'l', 'o', 'n', 't͡s', 'ɛ'])
 		self.assertEqual(asjp2ipa(['z', 'E', 'my~', 'a']), ['z', 'ɛ', 'mʲ', 'a'])

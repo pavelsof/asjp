@@ -145,6 +145,10 @@ def ipa2asjp(ipa_seq):
 		for token in ipa_seq:
 			token = replace_substitutes(normalise(token))
 
+			if token == '':
+				output.append('')
+				continue
+
 			try:
 				output.append(convert_ipa_token(token))
 			except (AssertionError, IndexError):
@@ -210,6 +214,10 @@ def asjp2ipa(asjp_seq):
 		output = []
 
 		for token in asjp_seq:
+			if token == '':
+				output.append('')
+				continue
+
 			try:
 				output.append(convert_asjp_token(token))
 			except (AssertionError, KeyError):
