@@ -135,7 +135,7 @@ def ipa2asjp(ipa_seq):
 					convert_ipa_token(token)
 					for token in tokenise_ipa(ipa_word, replace=True)]))
 			except (AssertionError, IndexError):
-				raise ValueError('invalid IPA word: {}'.format(ipa_word))
+				raise ValueError('invalid IPA word: {}'.format(ipa_word)) from None
 
 		return ' '.join(output)
 
@@ -151,8 +151,8 @@ def ipa2asjp(ipa_seq):
 
 			try:
 				output.append(convert_ipa_token(token))
-			except (AssertionError, IndexError):
-				raise ValueError('invalid IPA token: {}'.format(token))
+			except (AssertionError, IndexError) as err:
+				raise ValueError('invalid IPA token: {}'.format(token)) from None
 
 		return output
 
@@ -206,7 +206,7 @@ def asjp2ipa(asjp_seq):
 				output.append(''.join([
 					convert_asjp_token(token) for token in tokenise(asjp_word)]))
 			except (AssertionError, KeyError):
-				raise ValueError('invalid ASJP word: {}'.format(asjp_word))
+				raise ValueError('invalid ASJP word: {}'.format(asjp_word)) from None
 
 		return ' '.join(output)
 
@@ -221,7 +221,7 @@ def asjp2ipa(asjp_seq):
 			try:
 				output.append(convert_asjp_token(token))
 			except (AssertionError, KeyError):
-				raise ValueError('invalid ASJP token: {}'.format(token))
+				raise ValueError('invalid ASJP token: {}'.format(token)) from None
 
 		return output
 
@@ -283,7 +283,7 @@ def tokenise(string):
 		try:
 			output.extend(tokenise_word(word))
 		except ValueError as err:
-			raise ValueError('cannot tokenise {}: {!s}'.format(word, err))
+			raise ValueError('cannot tokenise {}: {!s}'.format(word, err)) from None
 
 	return output
 

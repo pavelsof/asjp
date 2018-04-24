@@ -41,15 +41,18 @@ api
 ===
 
 ``ipa2asjp(ipa_seq)`` takes an IPA string or sequence of string tokens and
-converts it into an ASJP string or sequence of string tokens.
+converts it into an ASJP string or sequence of string tokens. Raises a
+``ValueError`` if the input does not constitute a valid IPA sequence.
 
 ``asjp2ipa(asjp_seq)`` takes an ASJP string or sequence of string tokens and
 converts it into an IPA string or sequence of string tokens. As ASJP encodes
 much less information than IPA, something like
-``asjp2ipa(ipa2asjp(ipa_seq)) == ipa_seq`` would rarely hold true.
+``asjp2ipa(ipa2asjp(ipa_seq)) == ipa_seq`` would rarely hold true. Raises a
+``ValueError`` if the input does not constitute a valid ASJP sequence.
 
 ``tokenise(asjp_string)`` takes an ASJP string and converts it into a list of
-ASJP tokens.
+ASJP tokens. Raises a ``ValueError`` if the input cannot be unambiguously
+tokenised.
 
 ``tokenize(asjp_string)`` is an alias for ``tokenise(asjp_string)``.
 
